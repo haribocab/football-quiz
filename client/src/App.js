@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import './App.css';
 import Players from "./pages/Players";
 import PlayerDetail from "./pages/PlayerDetail";
 
 function App() {
-  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(2018);
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const [seasons, setSeasons] = useState([]);
 
   const handleYearChange = (year) => {
     setSelectedYear(year);
@@ -17,7 +18,20 @@ function App() {
     setSelectedTeam(teamId);
   };
 
-  const btnClass = 'text-center bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded';
+  const fetchSeasons = async () => {
+    try {
+      const response = await fetch('./../seasons.json');
+      const result = await response.json();
+      setSeasons(result);
+      console.log(result);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchSeasons();
+  }, []);
 
   return (
     <Router>
@@ -28,25 +42,23 @@ function App() {
               <div className="px-4 py-4 grid place-content-center min-h-screen">
                 <div className="w-64 rounded shadow-lg grid bg-white p-4 gap-2">
                   <ul className="grid gap-2">
-                    <li onClick={() => handleYearChange(2018)}
-                        className={`${btnClass} ${selectedYear === 2018 ? 'bg-blue-500 text-white' : ''}`}>2018</li>
-                    <li onClick={() => handleYearChange(2019)}
-                        className={`${btnClass} ${selectedYear === 2019 ? 'bg-blue-500 text-white' : ''}`}>2019</li>
-                    <li onClick={() => handleYearChange(2020)}
-                        className={`${btnClass} ${selectedYear === 2020 ? 'bg-blue-500 text-white' : ''}`}>2020</li>
+                    {seasons.map(season => (
+                      <li key={season.year} onClick={() => handleYearChange(season.year)}
+                          className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedYear === season.year ? 'bg-blue-500 text-white' : ''}`}>{season.year}</li>
+                    ))}
                   </ul>
-    
-                  <ul className="grid gap-2">
-                    <li onClick={() => handleTeamChange(25)}
-                        className={`${btnClass} ${selectedYear ? '' : 'opacity-25'} ${selectedTeam === 25 ? 'bg-blue-500 text-white' : ''}`}>Team 25</li>
-                    <li onClick={() => handleTeamChange(26)} 
-                        className={`${btnClass} ${selectedYear ? '' : 'opacity-25'} ${selectedTeam === 26 ? 'bg-blue-500 text-white' : ''}`}>Team 26</li>
-                    <li onClick={() => handleTeamChange(27)} 
-                        className={`${btnClass} ${selectedYear ? '' : 'opacity-25'} ${selectedTeam === 27 ? 'bg-blue-500 text-white' : ''}`}>Team 27</li>
-                  </ul>
-
+               
+                  {selectedYear &&(
+                    <ul className="grid gap-2">
+                      {seasons.find(season => season.year === selectedYear)?.teams.map(team => (
+                        <li key={team.id} onClick={() => handleTeamChange(team.id)} 
+                            className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeam === team.id ? 'bg-blue-500 text-white' : ''}`}>{team.name}</li>
+                      ))}
+                    </ul>
+                  )}
+        
                   <Link to={`/${selectedYear}/${selectedTeam}`} 
-                  className={`${btnClass} ${selectedTeam ? 'hover:scale-105' : 'opacity-25'}`}>Let's Quiz ({selectedYear} {selectedTeam})</Link>
+                  className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeam ? '' : 'opacity-25'}`}>Create a quiz ({selectedYear} {selectedTeam})</Link>
                 </div>
               </div>
             } />
