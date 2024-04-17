@@ -1,64 +1,56 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import './App.css';
+import Players from "./pages/Players";
 import PlayerDetail from "./pages/PlayerDetail";
 
 function App() {
-  const [players, setPlayers] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(2019);
+  const [selectedYear, setSelectedYear] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
 
-  const fetchPlayers = async () => {
-    try {
-      var requestOptions = {
-        method: "GET",
-        redirect: "follow",
-      };
-  
-      const response = await fetch("http://localhost:3030/response", requestOptions);
-      const result = await response.json();
-      setPlayers(result.map(player => player.player));
-    } catch (error) {
-      console.log("error", error);
-    }
+  const handleYearChange = (year) => {
+    setSelectedYear(year);
+    setSelectedTeam(null);
   };
 
-  // const apiKey = process.env.REACT_APP_API_KEY;
-  // const fetchPlayers = async () => {
-  //   try {
-  //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=${selectedYear}&team=${selectedTeam}`, {
-  //       headers: {
-  //         'x-rapidapi-key': `${apiKey}`,
-  //         'x-rapidapi-host': 'v3.football.api-sports.io'
-  //       }
-  //     });
-  //     const result = response.data.response;
-  //     setPlayers(result.map(player => player.player));
-  //   } catch (error) {
-  //     console.error("Error fetching players:", error);
-  //   }
-  // };
-  
-  useEffect(() => {
-    fetchPlayers();
-  }, []);
+  const handleTeamChange = (teamId) => {
+    setSelectedTeam(teamId);
+  };
+
+  const btnClass = 'text-center bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded';
 
   return (
     <Router>
-      <div className="App bg-gradient-to-r from-green-400 to-blue-500 min-h-screen">
+      <div className="bg-gradient-to-r from-green-400 to-blue-500 min-h-screen">
         <div className="max-w-4xl mx-auto">
           <Routes>
             <Route path="/" element={
-              <div className="grid grid-cols-1 xl:grid-cols-5 gap-9 px-4 py-4">
-                {players.map((player) => (
-                  <Link key={player.id} to={`/player/${player.id}`} className="rounded shadow-lg grid bg-white hover:scale-105 transition">
-                    <h2 className="my-2">{player.name}</h2>
-                    <img src={player.photo} alt="" className="rounded-b" width="150" height="150" />
-                  </Link>
-                ))}
+              <div className="px-4 py-4 grid place-content-center min-h-screen">
+                <div className="w-64 rounded shadow-lg grid bg-white p-4 gap-2">
+                  <ul className="grid gap-2">
+                    <li onClick={() => handleYearChange(2018)}
+                        className={`${btnClass} ${selectedYear === 2018 ? 'bg-blue-500 text-white' : ''}`}>2018</li>
+                    <li onClick={() => handleYearChange(2019)}
+                        className={`${btnClass} ${selectedYear === 2019 ? 'bg-blue-500 text-white' : ''}`}>2019</li>
+                    <li onClick={() => handleYearChange(2020)}
+                        className={`${btnClass} ${selectedYear === 2020 ? 'bg-blue-500 text-white' : ''}`}>2020</li>
+                  </ul>
+    
+                  <ul className="grid gap-2">
+                    <li onClick={() => handleTeamChange(25)}
+                        className={`${btnClass} ${selectedYear ? '' : 'opacity-25'} ${selectedTeam === 25 ? 'bg-blue-500 text-white' : ''}`}>Team 25</li>
+                    <li onClick={() => handleTeamChange(26)} 
+                        className={`${btnClass} ${selectedYear ? '' : 'opacity-25'} ${selectedTeam === 26 ? 'bg-blue-500 text-white' : ''}`}>Team 26</li>
+                    <li onClick={() => handleTeamChange(27)} 
+                        className={`${btnClass} ${selectedYear ? '' : 'opacity-25'} ${selectedTeam === 27 ? 'bg-blue-500 text-white' : ''}`}>Team 27</li>
+                  </ul>
+
+                  <Link to={`/${selectedYear}/${selectedTeam}`} 
+                  className={`${btnClass} ${selectedTeam ? 'hover:scale-105' : 'opacity-25'}`}>Let's Quiz ({selectedYear} {selectedTeam})</Link>
+                </div>
               </div>
             } />
+            <Route path="/:selectedYear/:selectedTeam" element={<Players />} />
             <Route path="/player/:playerId" element={<PlayerDetail />} />
           </Routes>
         </div>
