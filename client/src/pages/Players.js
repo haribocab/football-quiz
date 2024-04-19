@@ -7,6 +7,8 @@ function Players() {
   const [players, setPlayers] = useState([]);
   const {selectedYear, selectedTeam} = useParams();
   const [timer, setTimer] = useState(10);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [timerFinished, setTimerFinished] = useState(false); 
 
   const fetchPlayers = async () => {
     try {
@@ -42,29 +44,44 @@ function Players() {
   useEffect(() => {
     fetchPlayers();
 
-    let interval = setInterval(() => {
-      setTimer((prevTimer) => {
-        if (prevTimer === 0) {
-          clearInterval(interval);
-        }
-        return prevTimer - 1;
-      });
-    }, 1000);
-  }, []);
+    if (quizStarted) {
+      let interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer === 0) {
+            clearInterval(interval);
+            setTimerFinished(true);
+          }
+          return prevTimer - 1;
+        });
+      }, 1000);
+    }
+  }, [quizStarted]);
+
+  const startQuiz = () => {
+    setQuizStarted(true);
+  };
 
   return (<>
-    <div className="fixed top-0 right-0 flex justify-center mt-4 mr-4">
-      <div class="rounded shadow-lg bg-white">
-        {selectedYear} {selectedTeam}
+    <div className="fixed grid top-0 right-0 z-10 mt-4 mr-4">
+      <div className="rounded shadow-xl bg-white p-10">
+        <button onClick={startQuiz}>Start Quiz</button>
+        {timerFinished && (
+          <div>
+            Quiz Time's up!
+            <div>{selectedYear} {selectedTeam}</div>
+          </div>
+        )}
       </div>
     </div>
 
-    <div className="grid grid-cols-1 xl:grid-cols-5 gap-9 px-4 py-4">
-      {players.map((player) => (
-        <Link key={player.id} to={`/player/${player.id}`} className="rounded shadow-lg grid bg-white hover:scale-105 transition">
-            <img src={player.photo} alt="" className="rounded" width="150" height="150" />
-        </Link>
-      ))}
+    <div className="max-w-4xl mx-auto min-h-screen place-content-center">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 px-4 py-4">
+        {players.map((player) => (
+          <Link key={player.id} to={`/player/${player.id}`} className="rounded shadow-lg grid bg-white hover:scale-105 transition truncate">
+              <img src={player.photo} alt={player.name} className={`rounded ${!quizStarted && 'blur'}`} width="150" height="150" />
+          </Link>
+        ))}
+      </div>
     </div>
 
     <div className="fixed bottom-0 left-0 right-0 flex justify-center mb-4">

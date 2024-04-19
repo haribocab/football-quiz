@@ -1,26 +1,18 @@
 [
     {
       "year": 2018,
-      "teams": [
-        { "id": 25, "name": "Team 25" },
-        { "id": 26, "name": "Team 26" },
-        { "id": 27, "name": "Team 27" }
+      "leagues": [
+        { "id": 20, "name": "League 20" },
+        { "id": 21, "name": "League 21" },
+        { "id": 27, "name": "League 27" }
       ]
     },
     {
       "year": 2019,
-      "teams": [
-        { "id": 28, "name": "Team 28" },
-        { "id": 29, "name": "Team 29" },
-        { "id": 30, "name": "Team 30" }
-      ]
-    },
-    {
-      "year": 2020,
-      "teams": [
-        { "id": 31, "name": "Team 31" },
-        { "id": 32, "name": "Team 32" },
-        { "id": 33, "name": "Team 33" }
+      "leagues": [
+        { "id": 20, "name": "League 20" },
+        { "id": 29, "name": "League 29" },
+        { "id": 30, "name": "League 30" }
       ]
     }
   ]
