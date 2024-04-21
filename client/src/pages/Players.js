@@ -104,12 +104,14 @@ function Players({ league }) {
         </div>
       )}
       {timerFinished && (
-        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto">
+        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center">
           <h1>Quiz Time's up!</h1>
           <div>{selectedYear} </div>
           <div>{selectedTeam.name}</div>
           <img src={selectedTeam.logo} alt={selectedTeam.name} />
-          <Link to={`/`}>Create Quiz</Link>
+          <Link 
+          to={`/`} 
+          className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Create Quiz</Link>
         </div>
       )}
     </div>
