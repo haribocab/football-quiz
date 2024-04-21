@@ -6,9 +6,9 @@ import Players from "./pages/Players";
 import PlayerDetail from "./pages/PlayerDetail";
 
 function App() {
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [selectedLeague, setSelectedLeague] = useState(null);
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(0)
+  const [selectedLeagueId, setSelectedLeagueId] = useState(0);
+  const [selectedTeamId, setSelectedTeamId] = useState(0);
   const [seasons, setSeasons] = useState([]);
   const [teams, setTeams] = useState([]);
   const apiKey = process.env.REACT_APP_API_KEY;
@@ -41,7 +41,7 @@ function App() {
 
     // const fetchTeams = async () => {
     //   try {
-    //     const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${selectedYear}&league=${selectedLeague}`, {
+    //     const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${selectedYear}&league=${selectedLeagueId}`, {
     //       headers: {
     //         'x-rapidapi-key': `${apiKey}`,
     //         'x-rapidapi-host': 'v3.football.api-sports.io'
@@ -57,7 +57,7 @@ function App() {
 
     fetchSeasons();
     fetchTeams();
-  }, [apiKey, selectedLeague, selectedYear]);
+  }, [apiKey, selectedLeagueId, selectedYear]);
 
 
   const handleYearChange = (year) => {
@@ -65,11 +65,11 @@ function App() {
   };
 
   const handleLeagueChange = (leagueId) => {
-    setSelectedLeague(leagueId);
+    setSelectedLeagueId(leagueId);
   };
 
   const handleTeamChange = (teamId) => {
-    setSelectedTeam(teamId);
+    setSelectedTeamId(teamId);
   };
 
   return (
@@ -92,7 +92,7 @@ function App() {
               
                 <select 
                 onChange={(e) => handleLeagueChange(e.target.value)} 
-                value={selectedLeague}
+                value={selectedLeagueId}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 disabled={!selectedYear}
                 >
@@ -104,9 +104,9 @@ function App() {
 
                 <select 
                 onChange={(e) => handleTeamChange(e.target.value)} 
-                value={selectedTeam}
+                value={selectedTeamId}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                disabled={!selectedLeague}
+                disabled={!selectedLeagueId}
                 >
                   <option>Select Team</option>
                   {teams.map(team => (
@@ -114,12 +114,12 @@ function App() {
                   ))}
                 </select>
 
-                <Link to={`/${selectedYear}/${selectedTeam}`} 
-                className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeam ? '' : 'opacity-25'}`}>Let's Quiz</Link>
+                <Link to={`/${selectedYear}/${selectedTeamId}`} 
+                className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeamId ? '' : 'opacity-25'}`}>Let's Quiz</Link>
               </div>
             </div>
           } />
-          <Route path="/:selectedYear/:selectedTeam" element={<Players />} />
+          <Route path="/:selectedYear/:selectedTeamId" element={<Players league={{ id: selectedLeagueId}} />} />
           <Route path="/player/:playerId" element={<PlayerDetail />} />
         </Routes>
       </Router>

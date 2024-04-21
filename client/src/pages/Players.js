@@ -3,12 +3,14 @@ import axios from "axios";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-function Players() {
+function Players({ league }) {
   const [players, setPlayers] = useState([]);
-  const {selectedYear, selectedTeam} = useParams();
+  const {selectedYear, selectedTeamId} = useParams();
+  const [selectedTeam, setSelectedTeam] = useState([]);
   const [timer, setTimer] = useState(10);
   const [quizStarted, setQuizStarted] = useState(false);
-  const [timerFinished, setTimerFinished] = useState(false); 
+  const [timerFinished, setTimerFinished] = useState(false);
+  const apiKey = process.env.REACT_APP_API_KEY;
 
   const fetchPlayers = async () => {
     try {
@@ -24,7 +26,6 @@ function Players() {
     }
   };
 
-  // const apiKey = process.env.REACT_APP_API_KEY;
   // const fetchPlayers = async () => {
   //   try {
   //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=${selectedYear}&team=${selectedTeam}`, {
@@ -40,9 +41,43 @@ function Players() {
   //     console.error("Error fetching players:", error);
   //   }
   // };
+
+  const fetchTeams = async () => {
+    try {
+      var requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      };
+  
+      const response = await fetch("http://localhost:3031/response", requestOptions);
+      const result = await response.json();
+      const matchedTeam = result.filter(team => team.team.id === parseInt(selectedTeamId, 10)).find(team => team.team);
+      setSelectedTeam(matchedTeam.team);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+//   const fetchTeams = async () => {
+  //   try {
+  //     const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${selectedYear}&league=${league.id}`, {
+  //       headers: {
+  //         'x-rapidapi-key': `${apiKey}`,
+  //         'x-rapidapi-host': 'v3.football.api-sports.io'
+  //       }
+  //     });
+
+  //     const result = response.data.response;
+  //     const matchedTeam = result.filter(team => team.team.id === parseInt(selectedTeamId, 10)).find(team => team.team);
+  //     setSelectedTeam(matchedTeam.team);
+  //   } catch (error) {
+  //     console.error("Error fetching players:", error);
+  //   }
+  // };
   
   useEffect(() => {
     fetchPlayers();
+    fetchTeams();
 
     if (quizStarted) {
       let interval = setInterval(() => {
@@ -62,16 +97,21 @@ function Players() {
   };
 
   return (<>
-    <div className="fixed grid top-0 right-0 z-10 mt-4 mr-4">
-      <div className="rounded shadow-xl bg-white p-10">
-        <button onClick={startQuiz}>Start Quiz</button>
-        {timerFinished && (
-          <div>
-            Quiz Time's up!
-            <div>{selectedYear} {selectedTeam}</div>
-          </div>
-        )}
-      </div>
+    <div className="h-screen w-screen place-content-center grid fixed z-10 pointer-events-none">
+      {!quizStarted && (
+        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto">
+          <button onClick={startQuiz}>Start Quiz</button>
+        </div>
+      )}
+      {timerFinished && (
+        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto">
+          <h1>Quiz Time's up!</h1>
+          <div>{selectedYear} </div>
+          <div>{selectedTeam.name}</div>
+          <img src={selectedTeam.logo} alt={selectedTeam.name} />
+          <Link to={`/`}>Create Quiz</Link>
+        </div>
+      )}
     </div>
 
     <div className="max-w-4xl mx-auto min-h-screen place-content-center">
