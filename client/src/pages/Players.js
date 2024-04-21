@@ -3,10 +3,9 @@ import axios from "axios";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-function Players({ league }) {
+function Players({ team }) {
   const [players, setPlayers] = useState([]);
   const {selectedYear, selectedTeamId} = useParams();
-  const [selectedTeam, setSelectedTeam] = useState([]);
   const [timer, setTimer] = useState(10);
   const [quizStarted, setQuizStarted] = useState(false);
   const [timerFinished, setTimerFinished] = useState(false);
@@ -42,42 +41,8 @@ function Players({ league }) {
   //   }
   // };
 
-  const fetchTeams = async () => {
-    try {
-      var requestOptions = {
-        method: "GET",
-        redirect: "follow",
-      };
-  
-      const response = await fetch("http://localhost:3031/response", requestOptions);
-      const result = await response.json();
-      const matchedTeam = result.filter(team => team.team.id === parseInt(selectedTeamId, 10)).find(team => team.team);
-      setSelectedTeam(matchedTeam.team);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
-//   const fetchTeams = async () => {
-  //   try {
-  //     const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${selectedYear}&league=${league.id}`, {
-  //       headers: {
-  //         'x-rapidapi-key': `${apiKey}`,
-  //         'x-rapidapi-host': 'v3.football.api-sports.io'
-  //       }
-  //     });
-
-  //     const result = response.data.response;
-  //     const matchedTeam = result.filter(team => team.team.id === parseInt(selectedTeamId, 10)).find(team => team.team);
-  //     setSelectedTeam(matchedTeam.team);
-  //   } catch (error) {
-  //     console.error("Error fetching players:", error);
-  //   }
-  // };
-  
   useEffect(() => {
     fetchPlayers();
-    fetchTeams();
 
     if (quizStarted) {
       let interval = setInterval(() => {
@@ -103,12 +68,21 @@ function Players({ league }) {
           <button onClick={startQuiz}>Start Quiz</button>
         </div>
       )}
+      <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center">
+        <h1>Quiz Time's up!</h1>
+        <div>{selectedYear} </div>
+        <div>{team.name}</div>
+        <img src={team.logo} alt={team.name} />
+        <Link 
+        to={`/`} 
+        className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Create Quiz</Link>
+      </div>
       {timerFinished && (
         <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center">
           <h1>Quiz Time's up!</h1>
           <div>{selectedYear} </div>
-          <div>{selectedTeam.name}</div>
-          <img src={selectedTeam.logo} alt={selectedTeam.name} />
+          <div>{team.name}</div>
+          <img src={team.logo} alt={team.name} />
           <Link 
           to={`/`} 
           className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Create Quiz</Link>

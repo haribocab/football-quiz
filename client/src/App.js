@@ -9,6 +9,7 @@ function App() {
   const [selectedYear, setSelectedYear] = useState(0)
   const [selectedLeagueId, setSelectedLeagueId] = useState(0);
   const [selectedTeamId, setSelectedTeamId] = useState(0);
+  const [selectedTeam, setSelectedTeam] = useState([]);
   const [seasons, setSeasons] = useState([]);
   const [teams, setTeams] = useState([]);
   const apiKey = process.env.REACT_APP_API_KEY;
@@ -57,6 +58,7 @@ function App() {
 
     fetchSeasons();
     fetchTeams();
+
   }, [apiKey, selectedLeagueId, selectedYear]);
 
 
@@ -70,6 +72,7 @@ function App() {
 
   const handleTeamChange = (teamId) => {
     setSelectedTeamId(teamId);
+    setSelectedTeam(teams.find(team => team.id === parseInt(teamId, 10)));
   };
 
   return (
@@ -114,12 +117,13 @@ function App() {
                   ))}
                 </select>
 
+                {console.log(selectedTeam)}
                 <Link to={`/${selectedYear}/${selectedTeamId}`} 
                 className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeamId ? '' : 'opacity-25'}`}>Let's Quiz</Link>
               </div>
             </div>
           } />
-          <Route path="/:selectedYear/:selectedTeamId" element={<Players league={{ id: selectedLeagueId}} />} />
+          <Route path="/:selectedYear/:selectedTeamId" element={<Players team={{ name: selectedTeam.name, logo: selectedTeam.logo}} />} />
           <Route path="/player/:playerId" element={<PlayerDetail />} />
         </Routes>
       </Router>
