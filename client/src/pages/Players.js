@@ -62,22 +62,24 @@ function Players({ team }) {
   };
 
   return (<>
-      
     <div className="h-screen w-screen place-content-center grid fixed z-10 pointer-events-none">
       {!quizStarted && (
         <div className="rounded shadow-xl bg-white p-10 pointer-events-auto">
           <button onClick={startQuiz}>Start Quiz</button>
         </div>
       )}
-      <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center grid gap-2">
+      {timerFinished && (
+        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center grid gap-2">
           <h1>Quiz Time's up!</h1>
           <div>{team.season}</div>
+          <div>{team.country}</div>
           <div>{team.name}</div>
           <img src={team.logo} alt={team.name} />
           <Link 
           to={`/`} 
           className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Once More Quiz</Link>
-      </div>
+        </div>
+      )}
     </div>
 
     <div className="max-w-4xl mx-auto min-h-screen place-content-center">

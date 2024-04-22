@@ -137,7 +137,7 @@ function App() {
               </div>
             </div>
           } />
-          <Route path="/:selectedYearId/:selectedTeamId" element={selectedTeam && <Players team={{ name:selectedTeam.name, logo:selectedTeam.logo, season:year.name}} />} />
+          <Route path="/:selectedYearId/:selectedTeamId" element={selectedTeam && <Players team={{ season:year.name, country:selectedTeam.country, name:selectedTeam.name, logo:selectedTeam.logo}} />} />
           <Route path="/player/:playerId" element={<PlayerDetail />} />
         </Routes>
       </Router>
