@@ -55,9 +55,9 @@ function PlayerDetail(){
   return(
       <div className="px-4 py-4 grid place-content-center min-h-screen">
         {player && (
-          <div className="max-w-sm rounded shadow-lg grid bg-white mx-auto grid grid-cols-2">
+          <div className="max-w-sm rounded shadow-lg grid bg-white mx-auto grid-cols-2">
             <img src={player.photo} alt={player.name} className="rounded-s" />
-            <div className="grid place-content-center px-4">
+            <div className="grid place-content-center px-4 text-center">
               <div>{player.name}</div>
               <div>({player.age})</div>
               <div>{formatDate(player.birth.date)}</div>
