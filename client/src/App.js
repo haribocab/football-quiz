@@ -7,10 +7,12 @@ import PlayerDetail from "./pages/PlayerDetail";
 
 function App() {
   const [selectedYear, setSelectedYear] = useState(0)
-  const [selectedLeagueId, setSelectedLeagueId] = useState(0);
   const [selectedTeamId, setSelectedTeamId] = useState(0);
+  const [selectedCountryId, setSelectedCountryId] = useState(0);
+  const [selectedLeagueIds, setSelectedLeagueIds] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState([]);
   const [seasons, setSeasons] = useState([]);
+  const [countries, setCountries] = useState([]);
   const [teams, setTeams] = useState([]);
   const apiKey = process.env.REACT_APP_API_KEY;
   
@@ -25,49 +27,55 @@ function App() {
   }
   
   useEffect(() => {
-    // const fetchTeams = async () => {
-    //   try {
-    //     var requestOptions = {
-    //       method: "GET",
-    //       redirect: "follow",
-    //     };
-    
-    //     const response = await fetch("http://localhost:3031/response", requestOptions);
-    //     const result = await response.json();
-    //     setTeams(result.map(team => team.team));
-    //   } catch (error) {
-    //     console.log("error", error);
-    //   }
-    // };
-
     const fetchTeams = async () => {
       try {
-        const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${selectedYear}&league=${selectedLeagueId}`, {
-          headers: {
-            'x-rapidapi-key': `${apiKey}`,
-            'x-rapidapi-host': 'v3.football.api-sports.io'
-          }
-        });
-  
-        const result = response.data.response;
+        var requestOptions = {
+          method: "GET",
+          redirect: "follow",
+        };
+
+        console.log(selectedLeagueIds);
+    
+        const response = await fetch("http://localhost:3031/response", requestOptions);
+        const result = await response.json();
         setTeams(result.map(team => team.team));
       } catch (error) {
-        console.error("Error fetching players:", error);
+        console.log("error", error);
       }
     };
+
+    // const fetchTeams = async () => {
+    //   try {
+    //     const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${selectedYear}&league=${selectedLeagueId}`, {
+    //       headers: {
+    //         'x-rapidapi-key': `${apiKey}`,
+    //         'x-rapidapi-host': 'v3.football.api-sports.io'
+    //       }
+    //     });
+  
+    //     const result = response.data.response;
+    //     setTeams(result.map(team => team.team));
+    //   } catch (error) {
+    //     console.error("Error fetching players:", error);
+    //   }
+    // };
 
     fetchSeasons();
     fetchTeams();
 
-  }, [apiKey, selectedLeagueId, selectedYear]);
+  }, [apiKey, selectedLeagueIds, selectedYear]);
 
 
   const handleYearChange = (year) => {
     setSelectedYear(year);
+    const matchedSeason = seasons.find(season => season.year.id === parseInt(year, 10));
+    setCountries(matchedSeason.countries);
   };
 
-  const handleLeagueChange = (leagueId) => {
-    setSelectedLeagueId(leagueId);
+  const handleCountryChange = (countryId) => {
+    setSelectedCountryId(countryId);
+    const matchedCountry = countries.find(country => country.id === countryId);
+    setSelectedLeagueIds(matchedCountry.leagues.map(league => league.id));
   };
 
   const handleTeamChange = (teamId) => {
@@ -89,19 +97,19 @@ function App() {
                 >
                   <option>Select Season</option>
                   {seasons.map(season => (
-                    <option key={season.year} value={season.year}>{season.year}</option>
+                    <option key={season.year.id} value={season.year.id}>{season.year.name}</option>
                   ))}
                 </select>
-              
+                
                 <select 
-                onChange={(e) => handleLeagueChange(e.target.value)} 
-                value={selectedLeagueId}
+                onChange={(e) => handleCountryChange(e.target.value)} 
+                value={selectedCountryId}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 disabled={!selectedYear}
                 >
-                  <option>Select League</option>
-                  {selectedYear && seasons.find(season => season.year === parseInt(selectedYear))?.leagues.map(league => (
-                    <option key={league.id} value={league.id}>{league.name}</option>
+                  <option>Select Country</option>
+                  {countries.map(country => (
+                    <option key={country.id} value={country.id}>{country.name}</option>
                   ))}
                 </select>
 
@@ -109,7 +117,7 @@ function App() {
                 onChange={(e) => handleTeamChange(e.target.value)} 
                 value={selectedTeamId}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                disabled={!selectedLeagueId}
+                disabled={!selectedCountryId}
                 >
                   <option>Select Team</option>
                   {teams.map(team => (

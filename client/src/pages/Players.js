@@ -25,35 +25,35 @@ function Players({ teamName }) {
     }
   }, []);
 
-  // const fetchPlayers = async () => {
-  //   try {
-  //     var requestOptions = {
-  //       method: "GET",
-  //       redirect: "follow",
-  //     };
-  //     const response = await fetch("http://localhost:3030/response", requestOptions);
-  //     const result = await response.json();
-  //     setPlayers(result.map(player => player.player));
-  //   } catch (error) {
-  //     console.log("error", error);
-  //   }
-  // };
-
   const fetchPlayers = async () => {
     try {
-      const response = await axios.get(`https://v3.football.api-sports.io/players?season=${selectedYear}&team=${selectedTeamId}`, {
-        headers: {
-          'x-rapidapi-key': `${apiKey}`,
-          'x-rapidapi-host': 'v3.football.api-sports.io'
-        }
-      });
-      console.log(response.data);
-      const result = response.data.response;
+      var requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      };
+      const response = await fetch("http://localhost:3030/response", requestOptions);
+      const result = await response.json();
       setPlayers(result.map(player => player.player));
     } catch (error) {
-      console.error("Error fetching players:", error);
+      console.log("error", error);
     }
   };
+
+  // const fetchPlayers = async () => {
+  //   try {
+  //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=${selectedYear}&team=${selectedTeamId}`, {
+  //       headers: {
+  //         'x-rapidapi-key': `${apiKey}`,
+  //         'x-rapidapi-host': 'v3.football.api-sports.io'
+  //       }
+  //     });
+  //     console.log(response.data);
+  //     const result = response.data.response;
+  //     setPlayers(result.map(player => player.player));
+  //   } catch (error) {
+  //     console.error("Error fetching players:", error);
+  //   }
+  // };
 
   useEffect(() => {
     fetchPlayers();
@@ -97,8 +97,9 @@ function Players({ teamName }) {
     <div className="max-w-4xl mx-auto min-h-screen place-content-center">
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 px-4 py-4">
         {players.map((player) => (
-          <Link key={player.id} to={`/player/${player.id}`} className="rounded shadow-lg grid bg-white hover:scale-105 transition truncate">
-              <img src={player.photo} alt={player.name} className={`rounded ${!quizStarted && 'blur'}`} width="150" height="150" />
+          <Link key={player.id} to={`/player/${player.id}`} className="rounded shadow-lg grid hover:scale-105 transition truncate relative">
+             {!quizStarted && <div className="bg-gray grid place-content-center absolute w-full h-full bg-emerald-300">?</div>}
+             <img src={player.photo} alt={player.name} className="rounded" width="150" height="150" /> 
           </Link>
         ))}
       </div>

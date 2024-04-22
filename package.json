@@ -14,5 +14,8 @@
     "express": "^4.19.1",
     "tasc": "^0.2.0",
     "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.3"
   }
 }
