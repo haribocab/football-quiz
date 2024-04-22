@@ -64,9 +64,10 @@ function Players({ team }) {
   return (<>
     <div className="h-screen w-screen place-content-center grid fixed z-10 pointer-events-none">
       {!quizStarted && (
-        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto">
-          <button onClick={startQuiz}>Start Quiz</button>
-        </div>
+        <button 
+        onClick={startQuiz}
+        className="rounded shadow-xl bg-white p-10 pointer-events-auto"
+        >Start Quiz</button>
       )}
       {timerFinished && (
         <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center grid gap-2">
