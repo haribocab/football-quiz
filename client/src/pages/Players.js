@@ -3,27 +3,13 @@ import axios from "axios";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-function Players({ teamName }) {
+function Players({ team }) {
   const [players, setPlayers] = useState([]);
-  const {selectedYear, selectedTeamId} = useParams();
-  const [selectedTeamName, setSelectedTeamName] = useState(teamName);
+  const {selectedYear} = useParams();
   const [timer, setTimer] = useState(10);
   const [quizStarted, setQuizStarted] = useState(false);
   const [timerFinished, setTimerFinished] = useState(false);
   const apiKey = process.env.REACT_APP_API_KEY;
-
-  useEffect(() => {
-    if (teamName) {
-      localStorage.setItem("teamName", JSON.stringify(selectedTeamName));
-    }
-  }, [teamName, selectedTeamName]);
-  
-  useEffect(() => {
-    const savedTeam = localStorage.getItem("teamName");
-    if(savedTeam) {
-      setSelectedTeamName(JSON.parse(savedTeam));
-    }
-  }, []);
 
   const fetchPlayers = async () => {
     try {
@@ -76,22 +62,22 @@ function Players({ teamName }) {
   };
 
   return (<>
+      
     <div className="h-screen w-screen place-content-center grid fixed z-10 pointer-events-none">
       {!quizStarted && (
         <div className="rounded shadow-xl bg-white p-10 pointer-events-auto">
           <button onClick={startQuiz}>Start Quiz</button>
         </div>
       )}
-      {timerFinished && (
-        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center grid gap-2">
+      <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center grid gap-2">
           <h1>Quiz Time's up!</h1>
           <div>{selectedYear}</div>
-          { selectedTeamName && <div>{selectedTeamName}</div>}
+          <div>{team.name}</div>
+          <img src={team.logo} alt={team.name} />
           <Link 
           to={`/`} 
           className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Once More Quiz</Link>
       </div>
-      )}
     </div>
 
     <div className="max-w-4xl mx-auto min-h-screen place-content-center">
