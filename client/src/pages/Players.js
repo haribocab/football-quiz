@@ -3,13 +3,27 @@ import axios from "axios";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-function Players({ team }) {
+function Players({ teamName }) {
   const [players, setPlayers] = useState([]);
-  const {selectedYear, selectedTeamId} = useParams();
+  const {selectedYear} = useParams();
+  const [selectedTeam, setSelectedTeam] = useState(teamName);
   const [timer, setTimer] = useState(10);
   const [quizStarted, setQuizStarted] = useState(false);
   const [timerFinished, setTimerFinished] = useState(false);
   const apiKey = process.env.REACT_APP_API_KEY;
+
+  useEffect(() => {
+    if (teamName) {
+      localStorage.setItem("teamName", JSON.stringify(selectedTeam));
+    }
+  }, [teamName, selectedTeam]);
+  
+  useEffect(() => {
+    const savedTeam = localStorage.getItem("teamName");
+    if(savedTeam) {
+      setSelectedTeam(JSON.parse(savedTeam));
+    }
+  }, []);
 
   const fetchPlayers = async () => {
     try {
@@ -68,25 +82,15 @@ function Players({ team }) {
           <button onClick={startQuiz}>Start Quiz</button>
         </div>
       )}
-      <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center">
-        <h1>Quiz Time's up!</h1>
-        <div>{selectedYear} </div>
-        <div>{team.name}</div>
-        <img src={team.logo} alt={team.name} />
-        <Link 
-        to={`/`} 
-        className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Create Quiz</Link>
-      </div>
       {timerFinished && (
-        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center">
+        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center grid gap-2">
           <h1>Quiz Time's up!</h1>
-          <div>{selectedYear} </div>
-          <div>{team.name}</div>
-          <img src={team.logo} alt={team.name} />
+          <div>{selectedYear}</div>
+          { selectedTeam && <div>{selectedTeam}</div>}
           <Link 
           to={`/`} 
-          className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Create Quiz</Link>
-        </div>
+          className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Once More Quiz</Link>
+      </div>
       )}
     </div>
 

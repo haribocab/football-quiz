@@ -13,7 +13,7 @@ function App() {
   const [seasons, setSeasons] = useState([]);
   const [teams, setTeams] = useState([]);
   const apiKey = process.env.REACT_APP_API_KEY;
-
+  
   const fetchSeasons = async () => {
     try {
       const response = await fetch('./../seasons.json');
@@ -116,14 +116,13 @@ function App() {
                     <option key={team.id} value={team.id}>{team.name}</option>
                   ))}
                 </select>
-
-                {console.log(selectedTeam)}
+                
                 <Link to={`/${selectedYear}/${selectedTeamId}`} 
                 className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeamId ? '' : 'opacity-25'}`}>Let's Quiz</Link>
               </div>
             </div>
           } />
-          <Route path="/:selectedYear/:selectedTeamId" element={<Players team={{ name: selectedTeam.name, logo: selectedTeam.logo}} />} />
+          <Route path="/:selectedYear/:selectedTeamId" element={<Players teamName={selectedTeam.name} />} />
           <Route path="/player/:playerId" element={<PlayerDetail />} />
         </Routes>
       </Router>

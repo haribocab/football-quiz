@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "express": "^4.19.1"
+    "express": "^4.19.1",
+    "tasc": "^0.2.0",
+    "typescript": "^5.4.5"
   }
 }
