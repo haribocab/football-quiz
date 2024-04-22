@@ -6,18 +6,19 @@ import Players from "./pages/Players";
 import PlayerDetail from "./pages/PlayerDetail";
 
 function App() {
-  const [selectedYear, setSelectedYear] = useState(localStorage.getItem('selectedYear') || '0');
+  const [selectedYearId, setSelectedYearId] = useState(localStorage.getItem('selectedYearId') || '0');
   const [selectedTeamId, setSelectedTeamId] = useState(localStorage.getItem('selectedTeamId') || '0');
   const [selectedCountryId, setSelectedCountryId] = useState(localStorage.getItem('selectedCountryId') || '0');
   const [selectedLeagueIds, setSelectedLeagueIds] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState(localStorage.getItem('selectedTeam') ? JSON.parse(localStorage.getItem('selectedTeam')) : null);
   const [seasons, setSeasons] = useState([]);
+  const [year, setYear] = useState([]);
   const [countries, setCountries] = useState([]);
   const [teams, setTeams] = useState([]);
   const apiKey = process.env.REACT_APP_API_KEY;
 
   const storeSelectedValues = () => {
-    localStorage.setItem('selectedYear', selectedYear);
+    localStorage.setItem('selectedYearId', selectedYearId);
     localStorage.setItem('selectedTeamId', selectedTeamId);
     localStorage.setItem('selectedCountryId', selectedCountryId);
     localStorage.setItem('selectedTeam', JSON.stringify(selectedTeam));
@@ -29,8 +30,10 @@ function App() {
         const response = await fetch('./../seasons.json');
         const result = await response.json();
         setSeasons(result);
-        if(selectedYear){
-          setCountries(result.find(season => season.year.id === parseInt(selectedYear, 10)).countries);
+        if(selectedYearId){
+          const matchSeason = result.find(season => season.year.id === parseInt(selectedYearId, 10));
+          setYear(matchSeason.year);
+          setCountries(matchSeason.countries);
         }
       } catch (error) {
         console.log("error", error);
@@ -59,16 +62,17 @@ function App() {
     };
 
     fetchTeams();
-  }, [apiKey, selectedLeagueIds, selectedYear]);
+  }, [apiKey, selectedLeagueIds, selectedYearId]);
 
   useEffect(() => {
     storeSelectedValues();
-  }, [selectedYear, selectedCountryId, selectedTeamId, selectedTeam]);
+  }, [selectedYearId, selectedCountryId, selectedTeamId, selectedTeam]);
 
   const handleYearChange = (year) => {
-    setSelectedYear(year);
-    const matchedSeason = seasons.find(season => season.year.id === parseInt(year, 10));
-    setCountries(matchedSeason.countries);
+    setSelectedYearId(year);
+    const matchSeason = seasons.find(season => season.year.id === parseInt(year, 10));
+    setYear(matchSeason.year);
+    setCountries(matchSeason.countries);
     setSelectedCountryId(0);
     setSelectedTeamId(0);
   };
@@ -95,7 +99,7 @@ function App() {
               <div className="w-64 rounded shadow-lg grid bg-white p-4 gap-2">
                 <select
                   onChange={(e) => handleYearChange(e.target.value)}
-                  value={selectedYear}
+                  value={selectedYearId}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
                   <option>Select Season</option>
@@ -108,7 +112,7 @@ function App() {
                   onChange={(e) => handleCountryChange(e.target.value)}
                   value={selectedCountryId}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  disabled={!selectedYear}
+                  disabled={!selectedYearId}
                 >
                   <option>Select Country</option>
                   {countries.map(country => (
@@ -128,12 +132,12 @@ function App() {
                   ))}
                 </select>
 
-                <Link to={`/${selectedYear}/${selectedTeamId}`}
+                <Link to={`/${selectedYearId}/${selectedTeamId}`}
                   className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeamId ? '' : 'opacity-25'}`}>Let's Quiz</Link>
               </div>
             </div>
           } />
-          <Route path="/:selectedYear/:selectedTeamId" element={selectedTeam && <Players team={{ name:selectedTeam.name, logo:selectedTeam.logo}} />} />
+          <Route path="/:selectedYearId/:selectedTeamId" element={selectedTeam && <Players team={{ name:selectedTeam.name, logo:selectedTeam.logo, season:year.name}} />} />
           <Route path="/player/:playerId" element={<PlayerDetail />} />
         </Routes>
       </Router>

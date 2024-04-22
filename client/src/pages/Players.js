@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 function Players({ team }) {
   const [players, setPlayers] = useState([]);
-  const {selectedYear} = useParams();
+  const {selectedYearId} = useParams();
   const [timer, setTimer] = useState(10);
   const [quizStarted, setQuizStarted] = useState(false);
   const [timerFinished, setTimerFinished] = useState(false);
@@ -71,7 +71,7 @@ function Players({ team }) {
       )}
       <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center grid gap-2">
           <h1>Quiz Time's up!</h1>
-          <div>{selectedYear}</div>
+          <div>{team.season}</div>
           <div>{team.name}</div>
           <img src={team.logo} alt={team.name} />
           <Link 
