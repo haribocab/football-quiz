@@ -29,7 +29,7 @@ function App() {
         const response = await fetch('./../seasons.json');
         const result = await response.json();
         setSeasons(result);
-        if(selectedYear){
+        if(selectedYearId){
           const matchSeason = result.find(season => season.year.id === parseInt(selectedYearId, 10));
           setSelectedYear(matchSeason.year);
           setLeagues(matchSeason.leagues);
@@ -82,11 +82,13 @@ function App() {
     storeSelectedValues();
   }, [selectedYearId, selectedLeagueId, selectedTeamId, selectedTeam]);
 
-  const handleYearChange = (year) => {
-    setSelectedYearId(year);
-    const matchSeason = seasons.find(season => season.year.id === parseInt(year, 10));
-    setSelectedYear(matchSeason.year);
-    setLeagues(matchSeason.leagues);
+  const handleYearChange = (yearId) => {
+    setSelectedYearId(yearId);
+    const matchSeason = seasons.find(season => season.year.id === parseInt(yearId, 10));
+    if (matchSeason) {
+      setSelectedYear(matchSeason.year);
+      setLeagues(matchSeason.leagues);
+    }
     setSelectedLeagueId(0);
     setSelectedTeamId(0);
   };
@@ -101,8 +103,6 @@ function App() {
     const team = teams.find(team => team.id === parseInt(teamId, 10));
     setSelectedTeam(team);
   };
-
-  {console.log(selectedLeagueId)}
 
   return (
     <div className="bg-gradient-to-r from-green-400 to-blue-500 min-h-screen">
