@@ -11,34 +11,34 @@ function Players({ team }) {
   const [timerFinished, setTimerFinished] = useState(false);
   const apiKey = process.env.REACT_APP_API_KEY;
 
-  // const fetchPlayers = async () => {
-  //   try {
-  //     var requestOptions = {
-  //       method: "GET",
-  //       redirect: "follow",
-  //     };
-  //     const response = await fetch("http://localhost:3030/response", requestOptions);
-  //     const result = await response.json();
-  //     setPlayers(result.map(player => player.player));
-  //   } catch (error) {
-  //     console.log("error", error);
-  //   }
-  // };
-
   const fetchPlayers = async () => {
     try {
-      const response = await axios.get(`https://v3.football.api-sports.io/players?season=${team.season.date}&team=${selectedTeamId}`, {
-        headers: {
-          'x-rapidapi-key': `${apiKey}`,
-          'x-rapidapi-host': 'v3.football.api-sports.io'
-        }
-      });
-      const result = response.data.response;
+      var requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      };
+      const response = await fetch("http://localhost:3030/response", requestOptions);
+      const result = await response.json();
       setPlayers(result.map(player => player.player));
     } catch (error) {
-      console.error("Error fetching players:", error);
+      console.log("error", error);
     }
   };
+
+  // const fetchPlayers = async () => {
+  //   try {
+  //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=${team.season.date}&team=${selectedTeamId}`, {
+  //       headers: {
+  //         'x-rapidapi-key': `${apiKey}`,
+  //         'x-rapidapi-host': 'v3.football.api-sports.io'
+  //       }
+  //     });
+  //     const result = response.data.response;
+  //     setPlayers(result.map(player => player.player));
+  //   } catch (error) {
+  //     console.error("Error fetching players:", error);
+  //   }
+  // };
 
   useEffect(() => {
     fetchPlayers();
