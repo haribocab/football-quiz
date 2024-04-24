@@ -18,8 +18,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-js": "json-server --watch db.json --port 3030",
-    "start-seasons": "json-server --watch json/seasons_response.json --port 3031"
+    "start-js": "json-server --watch ../json/db.json --port 3030",
+    "start-seasons": "json-server --watch ../json/seasons_response.json --port 3031"
   },
   "proxy": "http://localhost:3001",
   "eslintConfig": {
