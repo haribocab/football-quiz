@@ -3,69 +3,90 @@
       "year": { "id": 1001, "name": "2018/19", "date": 2018},
       "leagues": [
         { "id": 78, "name": "Bundesliga" },
+        { "id": 79, "name": "2. Bundesliga" },
         { "id": 61, "name": "Ligue 1" },
-        { "id": 29, "name": "Premier League" },
+        { "id": 39, "name": "Premier League" },
+        { "id": 40, "name": "Championship" },
         { "id": 140, "name": "La Liga" },
-        { "id": 135, "name": "Serie A" }
+        { "id": 135, "name": "Serie A" },
+        { "id": 136, "name": "Serie B" }
       ]
     },
     {
       "year": { "id": 1002, "name": "2019/20", "date": 2019},
       "leagues": [
         { "id": 78, "name": "Bundesliga" },
+        { "id": 79, "name": "2. Bundesliga" },
         { "id": 61, "name": "Ligue 1" },
-        { "id": 29, "name": "Premier League" },
+        { "id": 39, "name": "Premier League" },
+        { "id": 40, "name": "Championship" },
         { "id": 140, "name": "La Liga" },
-        { "id": 135, "name": "Serie A" }
+        { "id": 135, "name": "Serie A" },
+        { "id": 136, "name": "Serie B" }
       ]
     },
     {
       "year": { "id": 1003, "name": "2020/21", "date": 2020},
       "leagues": [
         { "id": 78, "name": "Bundesliga" },
+        { "id": 79, "name": "2. Bundesliga" },
         { "id": 61, "name": "Ligue 1" },
-        { "id": 29, "name": "Premier League" },
+        { "id": 39, "name": "Premier League" },
+        { "id": 40, "name": "Championship" },
         { "id": 140, "name": "La Liga" },
-        { "id": 135, "name": "Serie A" }
+        { "id": 135, "name": "Serie A" },
+        { "id": 136, "name": "Serie B" }
       ]
     },    {
       "year": { "id": 1004, "name": "2021/22", "date": 2021},
       "leagues": [
         { "id": 78, "name": "Bundesliga" },
+        { "id": 79, "name": "2. Bundesliga" },
         { "id": 61, "name": "Ligue 1" },
-        { "id": 29, "name": "Premier League" },
+        { "id": 39, "name": "Premier League" },
+        { "id": 40, "name": "Championship" },
         { "id": 140, "name": "La Liga" },
-        { "id": 135, "name": "Serie A" }
+        { "id": 135, "name": "Serie A" },
+        { "id": 136, "name": "Serie B" }
       ]
     },
     {
       "year": { "id": 1005, "name": "2022/23", "date": 2022},
       "leagues": [
         { "id": 78, "name": "Bundesliga" },
+        { "id": 79, "name": "2. Bundesliga" },
         { "id": 61, "name": "Ligue 1" },
-        { "id": 29, "name": "Premier League" },
+        { "id": 39, "name": "Premier League" },
+        { "id": 40, "name": "Championship" },
         { "id": 140, "name": "La Liga" },
-        { "id": 135, "name": "Serie A" }
+        { "id": 135, "name": "Serie A" },
+        { "id": 136, "name": "Serie B" }
       ]
     },
     {
       "year": { "id": 1006, "name": "2023/24", "date": 2023},
       "leagues": [
         { "id": 78, "name": "Bundesliga" },
+        { "id": 79, "name": "2. Bundesliga" },
         { "id": 61, "name": "Ligue 1" },
-        { "id": 29, "name": "Premier League" },
+        { "id": 39, "name": "Premier League" },
+        { "id": 40, "name": "Championship" },
         { "id": 140, "name": "La Liga" },
-        { "id": 135, "name": "Serie A" }
+        { "id": 135, "name": "Serie A" },
+        { "id": 136, "name": "Serie B" }
       ]
     },
     {
       "year": { "id": 1007, "name": "2024/25", "date": 2024},
       "leagues": [
         { "id": 78, "name": "Bundesliga" },
+        { "id": 79, "name": "2. Bundesliga" },
         { "id": 61, "name": "Ligue 1" },
-        { "id": 29, "name": "Premier League" },
+        { "id": 39, "name": "Premier League" },
+        { "id": 40, "name": "Championship" },
         { "id": 140, "name": "La Liga" },
-        { "id": 135, "name": "Serie A" }
+        { "id": 135, "name": "Serie A" },
+        { "id": 136, "name": "Serie B" }
       ]
     }
   ]
