@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 
 function PlayerDetail(){
   const {playerId} = useParams();
   const [player, setPlayer] = useState(null);
+  const apiKey = process.env.REACT_APP_API_KEY;
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -31,8 +32,6 @@ function PlayerDetail(){
       console.log("error", error);
     }
   };
-
-  // const apiKey = process.env.REACT_APP_API_KEY;
 
   // const fetchPlayer = async () => {
   //   try {
