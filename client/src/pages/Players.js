@@ -5,41 +5,40 @@ import { useParams } from "react-router-dom";
 
 function Players({ team }) {
   const [players, setPlayers] = useState([]);
-  const {selectedYearId} = useParams();
+  const {selectedTeamId} = useParams();
   const [timer, setTimer] = useState(10);
   const [quizStarted, setQuizStarted] = useState(false);
   const [timerFinished, setTimerFinished] = useState(false);
   const apiKey = process.env.REACT_APP_API_KEY;
 
-  const fetchPlayers = async () => {
-    try {
-      var requestOptions = {
-        method: "GET",
-        redirect: "follow",
-      };
-      const response = await fetch("http://localhost:3030/response", requestOptions);
-      const result = await response.json();
-      setPlayers(result.map(player => player.player));
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
   // const fetchPlayers = async () => {
   //   try {
-  //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=${selectedYear}&team=${selectedTeamId}`, {
-  //       headers: {
-  //         'x-rapidapi-key': `${apiKey}`,
-  //         'x-rapidapi-host': 'v3.football.api-sports.io'
-  //       }
-  //     });
-  //     console.log(response.data);
-  //     const result = response.data.response;
+  //     var requestOptions = {
+  //       method: "GET",
+  //       redirect: "follow",
+  //     };
+  //     const response = await fetch("http://localhost:3030/response", requestOptions);
+  //     const result = await response.json();
   //     setPlayers(result.map(player => player.player));
   //   } catch (error) {
-  //     console.error("Error fetching players:", error);
+  //     console.log("error", error);
   //   }
   // };
+
+  const fetchPlayers = async () => {
+    try {
+      const response = await axios.get(`https://v3.football.api-sports.io/players?season=${team.season.date}&team=${selectedTeamId}`, {
+        headers: {
+          'x-rapidapi-key': `${apiKey}`,
+          'x-rapidapi-host': 'v3.football.api-sports.io'
+        }
+      });
+      const result = response.data.response;
+      setPlayers(result.map(player => player.player));
+    } catch (error) {
+      console.error("Error fetching players:", error);
+    }
+  };
 
   useEffect(() => {
     fetchPlayers();
@@ -70,12 +69,14 @@ function Players({ team }) {
         >Start Quiz</button>
       )}
       {timerFinished && (
-        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center grid gap-2">
-          <h1>Quiz Time's up!</h1>
-          <div>{team.season}</div>
-          <div>{team.country}</div>
-          <div>{team.name}</div>
-          <img src={team.logo} alt={team.name} />
+        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center">
+          <h1 className="mb-2">Quiz Time's up!</h1>
+          <div className="grid mb-6">
+            <div>{team.season.name}</div>
+            <div>{team.country}</div>
+            <div>{team.name}</div>
+            <img src={team.logo} alt={team.name} />
+          </div>
           <Link 
           to={`/`} 
           className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Once More Quiz</Link>

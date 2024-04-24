@@ -11,7 +11,7 @@ function App() {
   const [selectedLeagueId, setSelectedLeagueId] = useState(localStorage.getItem('selectedLeagueId') || '0');
   const [selectedTeam, setSelectedTeam] = useState(localStorage.getItem('selectedTeam') ? JSON.parse(localStorage.getItem('selectedTeam')) : null);
   const [seasons, setSeasons] = useState([]);
-  const [selectedYear, setSelectedYear] = useState([]);
+  const [seasonYear, setSeasonYear] = useState([]);
   const [leagues, setLeagues] = useState([]);
   const [teams, setTeams] = useState([]);
   const apiKey = process.env.REACT_APP_API_KEY;
@@ -31,7 +31,7 @@ function App() {
         setSeasons(result);
         if(selectedYearId){
           const matchSeason = result.find(season => season.year.id === parseInt(selectedYearId, 10));
-          setSelectedYear(matchSeason.year);
+          setSeasonYear(matchSeason.year);
           setLeagues(matchSeason.leagues);
         }
       } catch (error) {
@@ -43,37 +43,37 @@ function App() {
   }, []); 
 
   useEffect(() => {
-    // const fetchTeams = async () => {
-    //   try {
-    //     const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${selectedYear.date}&league=${selectedLeagueId}`, {
-    //       headers: {
-    //         'x-rapidapi-key': `${apiKey}`,
-    //         'x-rapidapi-host': 'v3.football.api-sports.io'
-    //       }
-    //     });
-  
-    //     const result = response.data.response;
-    //     setTeams(result.map(team => team.team));
-    //   } catch (error) {
-    //     console.error("Error fetching players:", error);
-    //   }
-    // };
-
     const fetchTeams = async () => {
       try {
-        var requestOptions = {
-          method: "GET",
-          redirect: "follow",
-        };
-
-
-        const response = await fetch("http://localhost:3031/response", requestOptions);
-        const result = await response.json();
+        const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${seasonYear.date}&league=${selectedLeagueId}`, {
+          headers: {
+            'x-rapidapi-key': `${apiKey}`,
+            'x-rapidapi-host': 'v3.football.api-sports.io'
+          }
+        });
+  
+        const result = response.data.response;
         setTeams(result.map(team => team.team));
       } catch (error) {
-        console.log("error", error);
+        console.error("Error fetching players:", error);
       }
     };
+
+    // const fetchTeams = async () => {
+    //   try {
+    //     var requestOptions = {
+    //       method: "GET",
+    //       redirect: "follow",
+    //     };
+
+
+    //     const response = await fetch("http://localhost:3031/response", requestOptions);
+    //     const result = await response.json();
+    //     setTeams(result.map(team => team.team));
+    //   } catch (error) {
+    //     console.log("error", error);
+    //   }
+    // };
 
     fetchTeams();
   }, [apiKey, selectedYearId, selectedLeagueId]);
@@ -86,7 +86,7 @@ function App() {
     setSelectedYearId(yearId);
     const matchSeason = seasons.find(season => season.year.id === parseInt(yearId, 10));
     if (matchSeason) {
-      setSelectedYear(matchSeason.year);
+      setSeasonYear(matchSeason.year);
       setLeagues(matchSeason.leagues);
     }
     setSelectedLeagueId(0);
@@ -151,7 +151,7 @@ function App() {
               </div>
             </div>
           } />
-          <Route path="/:selectedYearId/:selectedTeamId" element={selectedTeam && <Players team={{ season:selectedYear.name, country:selectedTeam.country, name:selectedTeam.name, logo:selectedTeam.logo}} />} />
+          <Route path="/:selectedYearId/:selectedTeamId" element={selectedTeam && <Players team={{ season:seasonYear, country:selectedTeam.country, name:selectedTeam.name, logo:selectedTeam.logo}} />} />
           <Route path="/player/:playerId" element={<PlayerDetail />} />
         </Routes>
       </Router>
