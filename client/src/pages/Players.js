@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 function Players({ team }) {
   const [players, setPlayers] = useState([]);
-  const {selectedTeamId} = useParams();
+  const {selectedYear, selectedTeamId} = useParams();
   const [timer, setTimer] = useState(10);
   const [quizStarted, setQuizStarted] = useState(false);
   const [timerFinished, setTimerFinished] = useState(false);
@@ -27,7 +27,7 @@ function Players({ team }) {
 
   // const fetchPlayers = async () => {
   //   try {
-  //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=${team.season.date}&team=${selectedTeamId}`, {
+  //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=${selectedYear}&team=${selectedTeamId}`, {
   //       headers: {
   //         'x-rapidapi-key': `${apiKey}`,
   //         'x-rapidapi-host': 'v3.football.api-sports.io'

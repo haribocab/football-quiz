@@ -1,0 +1,4 @@
+AuthUserFile "/home/xs952499/codecab.xyz/htpasswd/football-quiz.codecab.xyz/.htpasswd"
+AuthName "Member Site"
+AuthType BASIC
+require valid-user
