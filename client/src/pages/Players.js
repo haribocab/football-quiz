@@ -3,7 +3,7 @@ import axios from "axios";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-function Players({ team, quizOn }) {
+function Players({ team }) {
   const [players, setPlayers] = useState([]);
   const {selectedYear, selectedTeamId} = useParams();
   const [timer, setTimer] = useState(10);
