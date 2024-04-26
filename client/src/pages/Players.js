@@ -3,12 +3,16 @@ import axios from "axios";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-function Players({ team }) {
+function Players({ team, quizOn }) {
   const [players, setPlayers] = useState([]);
   const {selectedYear, selectedTeamId} = useParams();
   const [timer, setTimer] = useState(10);
-  const [quizStarted, setQuizStarted] = useState(false);
-  const [timerFinished, setTimerFinished] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(
+    localStorage.getItem("quizStarted") === "true" ? true : false
+  );
+  const [timerFinished, setTimerFinished] = useState(
+    localStorage.getItem("timerFinished") === "true" ? true : false
+  );
   const apiKey = process.env.REACT_APP_API_KEY;
 
   const fetchPlayers = async () => {
@@ -43,7 +47,7 @@ function Players({ team }) {
   useEffect(() => {
     fetchPlayers();
 
-    if (quizStarted) {
+    if (!timerFinished & quizStarted) {
       let interval = setInterval(() => {
         setTimer((prevTimer) => {
           if (prevTimer === 0) {
@@ -55,6 +59,11 @@ function Players({ team }) {
       }, 1000);
     }
   }, [quizStarted]);
+
+  useEffect(() => {
+    localStorage.setItem("quizStarted", quizStarted);
+    localStorage.setItem("timerFinished", timerFinished);
+  }, [quizStarted, timerFinished]);
 
   const startQuiz = () => {
     setQuizStarted(true);

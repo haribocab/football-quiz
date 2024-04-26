@@ -107,6 +107,11 @@ function App() {
     setSelectedTeam(team);
   };
 
+  const handleQuizCreate = () => {
+    localStorage.removeItem("quizStarted");
+    localStorage.removeItem("timerFinished");
+  }
+
   if (apiError) {
     return <NotFound />
   }
@@ -154,7 +159,8 @@ function App() {
                 </select>
 
                 <Link to={`/${selectedYear}/${selectedTeamId}`}
-                  className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeamId ? '' : 'opacity-25'}`}>Let's Quiz</Link>
+                  className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeamId ? '' : 'opacity-25'}`}
+                  onClick={() => handleQuizCreate()}>Let's Quiz</Link>
               </div>
             </div>
           } />
