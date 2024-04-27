@@ -4,15 +4,12 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 function Players({ team }) {
-  const [players, setPlayers] = useState([]);
+  const [players, setPlayers] = useState(JSON.parse(localStorage.getItem("players")) || []);
   const {selectedYear, selectedTeamId} = useParams();
   const [timer, setTimer] = useState(10);
-  const [quizStarted, setQuizStarted] = useState(
-    localStorage.getItem("quizStarted") === "true" ? true : false
-  );
-  const [timerFinished, setTimerFinished] = useState(
-    localStorage.getItem("timerFinished") === "true" ? true : false
-  );
+  const [quizStarted, setQuizStarted] = useState(localStorage.getItem("quizStarted") === "true" ? true : false);
+  const [timerFinished, setTimerFinished] = useState(localStorage.getItem("timerFinished") === "true" ? true : false);
+  const [showAnswer, setShowAnswer] = useState(localStorage.getItem("showAnswer") === "true" ? true : false)
   const apiKey = process.env.REACT_APP_API_KEY;
 
   const fetchPlayers = async () => {
@@ -24,6 +21,8 @@ function Players({ team }) {
       const response = await fetch("http://localhost:3030/response", requestOptions);
       const result = await response.json();
       setPlayers(result.map(player => player.player));
+      localStorage.setItem("players", JSON.stringify(result.map(player => player.player)));
+      console.log("players loaded");
     } catch (error) {
       console.log("error", error);
     }
@@ -45,9 +44,13 @@ function Players({ team }) {
   // };
 
   useEffect(() => {
-    fetchPlayers();
+    if (players.length === 0) {
+      fetchPlayers();
+    }
+  }, [players]);
 
-    if (quizStarted) {
+  useEffect(() => {
+    if (!timerFinished & quizStarted) {
       let interval = setInterval(() => {
         setTimer((prevTimer) => {
           if (prevTimer === 0) {
@@ -58,28 +61,43 @@ function Players({ team }) {
         });
       }, 1000);
     }
-  }, [quizStarted]);
 
-  useEffect(() => {
     localStorage.setItem("quizStarted", quizStarted);
     localStorage.setItem("timerFinished", timerFinished);
-  }, [quizStarted, timerFinished]);
 
-  const startQuiz = () => {
+    localStorage.setItem("showAnswer", showAnswer);
+  }, [quizStarted, timerFinished, showAnswer]);
+
+  const handleStartQuiz = () => {
     setQuizStarted(true);
   };
 
+  const handleShowAnswer = () => {
+    if(showAnswer) {
+      setShowAnswer(false);
+    } else {
+      setShowAnswer(true);
+    }
+  }
+
+
   return (<>
+    <div className="fixed top-0 right-0 flex justify-center mt-4 mr-4">
+    {!quizStarted && (
+      <button onClick={handleStartQuiz}
+      className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
+      >Start Quiz</button>
+    )}
+    {timerFinished && (
+      <button onClick={handleShowAnswer}
+      className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
+      >Show Answer</button>
+    )}
+    </div>
+
     <div className="h-screen w-screen place-content-center grid fixed z-10 pointer-events-none">
-      {!quizStarted && (
-        <button 
-        onClick={startQuiz}
-        className="rounded shadow-xl bg-white p-10 pointer-events-auto"
-        >Start Quiz</button>
-      )}
-      {timerFinished && (
+      {showAnswer && (
         <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center">
-          <h1 className="mb-2">Quiz Time's up!</h1>
           <div className="grid mb-6">
             <div>{team.season.name}</div>
             <div>{team.country}</div>
@@ -105,10 +123,10 @@ function Players({ team }) {
     </div>
 
     <div className="fixed bottom-0 left-0 right-0 flex justify-center mb-4">
-        <div className="w-64 bg-gray-300">
-          <div className="h-4 bg-blue-500" style={{ width: `${(timer / 10) * 100}%` }} />
-        </div>
+      <div className="w-64 bg-gray-300">
+        <div className={`h-4 bg-${timerFinished ? "grey-300" : "blue-500"}`} style={{ width: `${(timer / 10) * 100}%` }} />
       </div>
+    </div>
   </>);
 }
 
