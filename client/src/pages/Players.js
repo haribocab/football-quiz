@@ -22,7 +22,7 @@ function Players({ team }) {
       const result = await response.json();
       setPlayers(result.map(player => player.player));
       localStorage.setItem("players", JSON.stringify(result.map(player => player.player)));
-      console.log("players loaded");
+      console.log("fetsch players");
     } catch (error) {
       console.log("error", error);
     }
@@ -38,6 +38,8 @@ function Players({ team }) {
   //     });
   //     const result = response.data.response;
   //     setPlayers(result.map(player => player.player));
+  //     localStorage.setItem("players", JSON.stringify(result.map(player => player.player)));
+  //     console.log("fetsch players");
   //   } catch (error) {
   //     console.error("Error fetching players:", error);
   //   }

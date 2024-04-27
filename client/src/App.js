@@ -9,7 +9,7 @@ function App() {
   const [selectedYear, setSelectedYear] = useState(localStorage.getItem('selectedYear') || '0');
   const [selectedTeamId, setSelectedTeamId] = useState(localStorage.getItem('selectedTeamId') || '0');
   const [selectedLeagueId, setSelectedLeagueId] = useState(localStorage.getItem('selectedLeagueId') || '0');
-  const [selectedTeam, setSelectedTeam] = useState(localStorage.getItem('selectedTeam') ? JSON.parse(localStorage.getItem('selectedTeam')) : null);
+  const [selectedTeam, setSelectedTeam] = useState(null);
   const [seasons, setSeasons] = useState([]);
   const [seasonInfo, setSeasonInfo] = useState([]);
   const [leagues, setLeagues] = useState([]);
@@ -54,6 +54,7 @@ function App() {
   
     //     const result = response.data.response;
     //     setTeams(result.map(team => team.team));
+    //     console.log("fetsch teams");
     //   } catch (error) {
     //     console.error("Error fetching players:", error);
     //   }
@@ -69,13 +70,16 @@ function App() {
         const response = await fetch("http://localhost:3031/response", requestOptions);
         const result = await response.json();
         setTeams(result.map(team => team.team));
+        console.log("fetsch teams");
       } catch (error) {
         console.log("error", error);
       }
     };
 
-    fetchTeams();
-  }, [apiKey, selectedYear, selectedLeagueId]);
+    if (selectedLeagueId !== '0') {
+      fetchTeams();
+    }
+  }, [selectedLeagueId,]);
 
   useEffect(() => {
     storeSelectedValues();
@@ -88,13 +92,13 @@ function App() {
       setSeasonInfo(matchSeason.season);
       setLeagues(matchSeason.leagues);
     }
-    setSelectedLeagueId(0);
-    setSelectedTeamId(0);
+    setSelectedLeagueId('0');
+    setSelectedTeamId('0');
   };
 
   const handleLeagueChange = (leagueId) => {
     setSelectedLeagueId(leagueId);
-    setSelectedTeamId(0);
+    setSelectedTeamId('0');
   };
 
   const handleTeamChange = (teamId) => {
@@ -103,11 +107,11 @@ function App() {
     setSelectedTeam(team);
   };
 
-  const handleQuizCreate = () => {
+  const handleQuizCreate = (selectedTeam) => {
     localStorage.removeItem("quizStarted");
     localStorage.removeItem("timerFinished");
     localStorage.removeItem("players");
-    localStorage.removeItem("showAnswer");
+    setSelectedTeam(selectedTeam);
   }
   
   return (
@@ -154,7 +158,7 @@ function App() {
 
                 <Link to={`/${selectedYear}/${selectedTeamId}`}
                   className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeamId ? '' : 'opacity-25'}`}
-                  onClick={() => handleQuizCreate()}>Let's Quiz</Link>
+                  onClick={() => handleQuizCreate(selectedTeam)}>Let's Quiz</Link>
               </div>
             </div>
           } />

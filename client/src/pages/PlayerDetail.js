@@ -28,6 +28,7 @@ function PlayerDetail(){
       const result = await response.json();
       const player = result.find(item => item.player.id === parseInt(playerId, 10));
       setPlayer(player.player);
+      console.log("fetsch player detail");
     } catch (error) {
       console.log("error", error);
     }
@@ -42,6 +43,7 @@ function PlayerDetail(){
   //       }
   //     });
   //     setPlayer(response.data.response[0].player);
+  //     console.log("fetsch player detail");
   //   } catch (error) {
   //     console.error("Error fetching player:", error);
   //   }
