@@ -157,7 +157,7 @@ function App() {
                 </select>
 
                 <Link to={`/${selectedYear}/${selectedTeamId}`}
-                  className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeamId ? '' : 'opacity-25'}`}
+                  className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeamId === '0' ? 'opacity-25' : ''}`}
                   onClick={() => handleQuizCreate(selectedTeam)}>Let's Quiz</Link>
               </div>
             </div>
