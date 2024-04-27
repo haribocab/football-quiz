@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { BrowserRouter as Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 function Players({ team }) {
@@ -47,7 +47,7 @@ function Players({ team }) {
   useEffect(() => {
     fetchPlayers();
 
-    if (!timerFinished & quizStarted) {
+    if (quizStarted) {
       let interval = setInterval(() => {
         setTimer((prevTimer) => {
           if (prevTimer === 0) {
@@ -58,7 +58,7 @@ function Players({ team }) {
         });
       }, 1000);
     }
-  }, [quizStarted, timerFinished]);
+  }, [quizStarted]);
 
   useEffect(() => {
     localStorage.setItem("quizStarted", quizStarted);
@@ -108,7 +108,6 @@ function Players({ team }) {
         <div className="w-64 bg-gray-300">
           <div className="h-4 bg-blue-500" style={{ width: `${(timer / 10) * 100}%` }} />
         </div>
-
       </div>
   </>);
 }
