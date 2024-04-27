@@ -4,7 +4,6 @@ import './App.css';
 import axios from "axios";
 import Players from "./pages/Players";
 import PlayerDetail from "./pages/PlayerDetail";
-import NotFound from "./pages/NotFound";
 
 function App() {
   const [selectedYear, setSelectedYear] = useState(localStorage.getItem('selectedYear') || '0');
@@ -15,7 +14,6 @@ function App() {
   const [seasonInfo, setSeasonInfo] = useState([]);
   const [leagues, setLeagues] = useState([]);
   const [teams, setTeams] = useState([]);
-  const [apiError, setApiError] = useState(false);
   const apiKey = process.env.REACT_APP_API_KEY;
 
   const storeSelectedValues = () => {
@@ -71,10 +69,8 @@ function App() {
         const response = await fetch("http://localhost:3031/response", requestOptions);
         const result = await response.json();
         setTeams(result.map(team => team.team));
-        setApiError(false);
       } catch (error) {
         console.log("error", error);
-        setApiError(true);
       }
     };
 
@@ -110,10 +106,6 @@ function App() {
   const handleQuizCreate = () => {
     localStorage.removeItem("quizStarted");
     localStorage.removeItem("timerFinished");
-  }
-
-  if (apiError) {
-    return <NotFound />
   }
   
   return (
