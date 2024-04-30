@@ -110,6 +110,7 @@ function App() {
     localStorage.removeItem("quizStarted");
     localStorage.removeItem("timerFinished");
     localStorage.removeItem("players");
+    localStorage.removeItem("showAnswer");
     setSelectedTeam(selectedTeam);
   }
   
