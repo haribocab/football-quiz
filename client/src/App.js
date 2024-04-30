@@ -9,19 +9,19 @@ function App() {
   const [selectedYear, setSelectedYear] = useState(localStorage.getItem('selectedYear') || '0');
   const [selectedTeamId, setSelectedTeamId] = useState(localStorage.getItem('selectedTeamId') || '0');
   const [selectedLeagueId, setSelectedLeagueId] = useState(localStorage.getItem('selectedLeagueId') || '0');
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState(JSON.parse(localStorage.getItem('selectedTeam')) || null);
   const [seasons, setSeasons] = useState([]);
-  const [seasonInfo, setSeasonInfo] = useState([]);
+  const [selectedSeason, setSelectedSeason] = useState([]);
   const [leagues, setLeagues] = useState([]);
   const [teams, setTeams] = useState([]);
   const apiKey = process.env.REACT_APP_API_KEY;
 
-  const storeSelectedValues = () => {
+  useEffect(() => {
     localStorage.setItem('selectedYear', selectedYear);
     localStorage.setItem('selectedTeamId', selectedTeamId);
     localStorage.setItem('selectedLeagueId', selectedLeagueId);
     localStorage.setItem('selectedTeam', JSON.stringify(selectedTeam));
-  };
+  }, [selectedYear, selectedLeagueId, selectedTeamId, selectedTeam]);
 
   useEffect(() => {
     const fetchSeasons = async () => {
@@ -31,7 +31,7 @@ function App() {
         setSeasons(result);
         if(selectedYear){
           const matchSeason = result.find(season => season.season.year === parseInt(selectedYear, 10));
-          setSeasonInfo(matchSeason.season);
+          setSelectedSeason(matchSeason.season);
           setLeagues(matchSeason.leagues);
         }
       } catch (error) {
@@ -81,15 +81,11 @@ function App() {
     }
   }, [selectedLeagueId,]);
 
-  useEffect(() => {
-    storeSelectedValues();
-  }, [selectedYear, selectedLeagueId, selectedTeamId, selectedTeam]);
-
   const handleYearChange = (year) => {
     setSelectedYear(year);
     const matchSeason = seasons.find(season => season.season.year === parseInt(year, 10));
     if (matchSeason) {
-      setSeasonInfo(matchSeason.season);
+      setSelectedSeason(matchSeason.season);
       setLeagues(matchSeason.leagues);
     }
     setSelectedLeagueId('0');
@@ -162,7 +158,7 @@ function App() {
               </div>
             </div>
           } />
-          <Route path="/:selectedYear/:selectedTeamId" element={selectedTeam && <Players team={{ season:seasonInfo, country:selectedTeam.country, name:selectedTeam.name, logo:selectedTeam.logo}} />} />
+          <Route path="/:selectedYear/:selectedTeamId" element={selectedTeam && <Players team={{ season:selectedSeason, country:selectedTeam.country, name:selectedTeam.name, logo:selectedTeam.logo}} />} />
           <Route path="/player/:playerId" element={<PlayerDetail />} />
         </Routes>
       </Router>
