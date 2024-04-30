@@ -11,7 +11,7 @@ function App() {
   const [selectedLeagueId, setSelectedLeagueId] = useState(localStorage.getItem('selectedLeagueId') || '0');
   const [selectedTeam, setSelectedTeam] = useState(() => {
     const team = localStorage.getItem('selectedTeam');
-    return team & team !== "undefined" ? JSON.parse(team) : null;
+    return team ? JSON.parse(team) : null;
   });
   const [seasons, setSeasons] = useState([]);
   const [selectedSeason, setSelectedSeason] = useState([]);
