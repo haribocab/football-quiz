@@ -32,7 +32,7 @@ function App() {
         const response = await fetch('./../seasons.json');
         const result = await response.json();
         setSeasons(result);
-        if(selectedYear){
+        if(selectedYear & selectedYear != undefined){
           const matchSeason = result.find(season => season.season.year === parseInt(selectedYear, 10));
           setSelectedSeason(matchSeason.season);
           setLeagues(matchSeason.leagues);
@@ -43,7 +43,7 @@ function App() {
     };
 
     fetchSeasons();
-  }, []); 
+  }, [selectedYear]); 
 
   useEffect(() => {
     // const fetchTeams = async () => {
