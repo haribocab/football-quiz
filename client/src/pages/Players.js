@@ -116,7 +116,7 @@ function Players({ team }) {
     <div className="max-w-4xl mx-auto min-h-screen place-content-center">
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 px-4 py-4">
         {players.map((player) => (
-          <Link key={player.id} to={`/player/${player.id}`} className="rounded shadow-lg grid hover:scale-105 transition truncate relative">
+          <Link key={player.id} to={`/player/${selectedYear}/${player.id}`} className="rounded shadow-lg grid hover:scale-105 transition truncate relative">
              {!quizStarted && <div className="bg-gray grid place-content-center absolute w-full h-full bg-emerald-300">?</div>}
              <img src={player.photo} alt={player.name} className="rounded" width="150" height="150" /> 
           </Link>

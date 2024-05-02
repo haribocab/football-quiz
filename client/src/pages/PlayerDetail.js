@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 function PlayerDetail(){
-  const {playerId} = useParams();
+  const {selectedYear, playerId} = useParams();
   const [player, setPlayer] = useState(null);
   const apiKey = process.env.REACT_APP_API_KEY;
 
@@ -36,7 +36,7 @@ function PlayerDetail(){
 
   // const fetchPlayer = async () => {
   //   try {
-  //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=2019&id=${playerId}`, {
+  //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=${selectedYear}&id=${playerId}`, {
   //       headers: {
   //         'x-rapidapi-key': `${apiKey}`,
   //         'x-rapidapi-host': 'v3.football.api-sports.io'

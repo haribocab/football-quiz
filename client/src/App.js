@@ -46,38 +46,38 @@ function App() {
   }, [selectedYear]); 
 
   useEffect(() => {
-    // const fetchTeams = async () => {
-    //   try {
-    //     const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${selectedYear}&league=${selectedLeagueId}`, {
-    //       headers: {
-    //         'x-rapidapi-key': `${apiKey}`,
-    //         'x-rapidapi-host': 'v3.football.api-sports.io'
-    //       }
-    //     });
-  
-    //     const result = response.data.response;
-    //     setTeams(result.map(team => team.team));
-    //     console.log("fetsch teams");
-    //   } catch (error) {
-    //     console.error("Error fetching players:", error);
-    //   }
-    // };
-
     const fetchTeams = async () => {
       try {
-        var requestOptions = {
-          method: "GET",
-          redirect: "follow",
-        };
-
-        const response = await fetch("http://localhost:3031/response", requestOptions);
-        const result = await response.json();
+        const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${selectedYear}&league=${selectedLeagueId}`, {
+          headers: {
+            'x-rapidapi-key': `${apiKey}`,
+            'x-rapidapi-host': 'v3.football.api-sports.io'
+          }
+        });
+  
+        const result = response.data.response;
         setTeams(result.map(team => team.team));
         console.log("fetsch teams");
       } catch (error) {
-        console.log("error", error);
+        console.error("Error fetching players:", error);
       }
     };
+
+    // const fetchTeams = async () => {
+    //   try {
+    //     var requestOptions = {
+    //       method: "GET",
+    //       redirect: "follow",
+    //     };
+
+    //     const response = await fetch("http://localhost:3031/response", requestOptions);
+    //     const result = await response.json();
+    //     setTeams(result.map(team => team.team));
+    //     console.log("fetsch teams");
+    //   } catch (error) {
+    //     console.log("error", error);
+    //   }
+    // };
 
     if (selectedLeagueId !== '0') {
       fetchTeams();
@@ -156,14 +156,14 @@ function App() {
                   ))}
                 </select>
 
-                <Link to={`/${selectedYear}/${selectedTeamId}`}
+                <Link to={`/team/${selectedYear}/${selectedTeamId}`}
                   className={`text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${selectedTeamId === '0' ? 'opacity-25' : ''}`}
                   onClick={() => handleQuizCreate(selectedTeam)}>Let's Quiz</Link>
               </div>
             </div>
           } />
-          <Route path="/:selectedYear/:selectedTeamId" element={selectedTeam && <Players team={{ season:selectedSeason, country:selectedTeam.country, name:selectedTeam.name, logo:selectedTeam.logo}} />} />
-          <Route path="/player/:playerId" element={<PlayerDetail />} />
+          <Route path="/team/:selectedYear/:selectedTeamId" element={selectedTeam && <Players team={{ season:selectedSeason, country:selectedTeam.country, name:selectedTeam.name, logo:selectedTeam.logo}} />} />
+          <Route path="/player/:selectedYear/:playerId" element={<PlayerDetail />} />
         </Routes>
       </Router>
     </div>
