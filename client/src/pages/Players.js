@@ -84,7 +84,7 @@ function Players({ team }) {
 
 
   return (<>
-    <div className="fixed top-0 right-0 flex justify-center mt-4 mr-4">
+    <div className="fixed top-0 right-0 flex justify-center mt-4 mr-4 z-10">
     {!quizStarted && (
       <button onClick={handleStartQuiz}
       className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
