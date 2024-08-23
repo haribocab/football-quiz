@@ -81,23 +81,21 @@ function Players({ team }) {
       setShowAnswer(true);
     }
   }
-
-
+  
   return (<>
-    <div className="fixed top-0 right-0 flex justify-center mt-4 mr-4 z-10">
-    {!quizStarted && (
-      <button onClick={handleStartQuiz}
-      className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
-      >Start Quiz</button>
-    )}
-    {timerFinished && (
-      <button onClick={handleShowAnswer}
-      className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
-      >Show Answer</button>
-    )}
-    </div>
-
-    <div className="h-screen w-screen place-content-center grid fixed z-10 pointer-events-none">
+    <div className={"h-screen w-screen place-content-center grid fixed z-10 pointer-events-none" + (!quizStarted || timerFinished & !showAnswer ? 'inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80' : '')}>
+      {!quizStarted && (
+        <button onClick={handleStartQuiz}
+        className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
+        >Start Quiz</button>
+      )}
+      
+      {timerFinished && !showAnswer && (
+        <button onClick={handleShowAnswer}
+        className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
+        >Show Answer</button>
+      )}
+      
       {showAnswer && (
         <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center">
           <div className="grid mb-6">
