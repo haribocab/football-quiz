@@ -46,39 +46,37 @@ function App() {
   }, [selectedYear]); 
 
   useEffect(() => {
-    // const fetchTeams = async () => {
-    //   try {
-    //     const response = await axios.get(`https://v3.football.api-sports.io/teams?season=${selectedYear}&league=${selectedLeagueId}`, {
-    //       headers: {
-    //         'x-rapidapi-key': `${apiKey}`,
-    //         'x-rapidapi-host': 'v3.football.api-sports.io'
-    //       }
-    //     });
-  
-    //     const result = response.data.response;
-    //     setTeams(result.map(team => team.team));
-    //     console.log("fetsch teams");
-    //   } catch (error) {
-    //     console.error("Error fetching players:", error);
-    //   }
-    // };
-
     const fetchTeams = async () => {
       try {
-        var requestOptions = {
-          method: "GET",
-          redirect: "follow",
-        };
-
-        const response = await fetch("http://localhost:3031/response", requestOptions);
-        const result = await response.json();
-        setTeams(result.map(team => team.team));
-        console.log("fetsch teams");
+        let teamsData;
+    
+        if (process.env.NODE_ENV === 'development') {
+          // Fetch data from the local JSON file in development
+          const response = await fetch("http://localhost:3031/response");
+          const result = await response.json();
+          teamsData = result.map(team => team.team);
+        } else {
+          // Fetch data from the API in production
+          const response = await axios.get(
+            `https://v3.football.api-sports.io/teams?season=${selectedYear}&league=${selectedLeagueId}`, 
+            {
+              headers: {
+                'x-rapidapi-key': apiKey,
+                'x-rapidapi-host': 'v3.football.api-sports.io',
+              },
+            }
+          );
+          const result = response.data.response;
+          teamsData = result.map(team => team.team);
+        }
+    
+        setTeams(teamsData);
+        console.log("Fetched teams");
       } catch (error) {
-        console.log("error", error);
+        console.error("Error fetching teams:", error);
       }
     };
-
+    
     if (selectedLeagueId !== '0') {
       fetchTeams();
     }

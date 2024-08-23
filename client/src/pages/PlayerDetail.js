@@ -19,36 +19,34 @@ function PlayerDetail(){
 
   const fetchPlayer = async () => {
     try {
-      var requestOptions = {
-        method: "GET",
-        redirect: "follow",
-      };
-  
-      const response = await fetch("http://localhost:3030/response", requestOptions);
-      const result = await response.json();
-      const player = result.find(item => item.player.id === parseInt(playerId, 10));
-      setPlayer(player.player);
-      console.log("fetsch player detail");
+      let playerData;
+      
+      if (process.env.NODE_ENV === 'development') {
+        // Fetch data from the local JSON file in development
+        const response = await fetch("http://localhost:3030/response");
+        const result = await response.json();
+        playerData = result.find(item => item.player.id === parseInt(playerId, 10)).player;
+      } else {
+        // Fetch data from the API in production
+        const response = await axios.get(
+          `https://v3.football.api-sports.io/players?season=${selectedYear}&id=${playerId}`, 
+          {
+            headers: {
+              'x-rapidapi-key': apiKey,
+              'x-rapidapi-host': 'v3.football.api-sports.io',
+            },
+          }
+        );
+        playerData = response.data.response[0].player;
+      }
+
+      setPlayer(playerData);
+      console.log("Fetched player details");
     } catch (error) {
-      console.log("error", error);
+      console.error("Error fetching player:", error);
     }
   };
-
-  // const fetchPlayer = async () => {
-  //   try {
-  //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=${selectedYear}&id=${playerId}`, {
-  //       headers: {
-  //         'x-rapidapi-key': `${apiKey}`,
-  //         'x-rapidapi-host': 'v3.football.api-sports.io'
-  //       }
-  //     });
-  //     setPlayer(response.data.response[0].player);
-  //     console.log("fetsch player detail");
-  //   } catch (error) {
-  //     console.error("Error fetching player:", error);
-  //   }
-  // };
-
+  
   useEffect(() => {
     fetchPlayer();
   }, []);

@@ -14,36 +14,35 @@ function Players({ team }) {
 
   const fetchPlayers = async () => {
     try {
-      var requestOptions = {
-        method: "GET",
-        redirect: "follow",
-      };
-      const response = await fetch("http://localhost:3030/response", requestOptions);
-      const result = await response.json();
-      setPlayers(result.map(player => player.player));
-      localStorage.setItem("players", JSON.stringify(result.map(player => player.player)));
-      console.log("fetsch players");
+      let playersData;
+  
+      if (process.env.NODE_ENV === 'development') {
+        // Fetch data from the local JSON file in development
+        const response = await fetch("http://localhost:3030/response");
+        const result = await response.json();
+        playersData = result.map(player => player.player);
+      } else {
+        // Fetch data from the API in production
+        const response = await axios.get(
+          `https://v3.football.api-sports.io/players?season=${selectedYear}&team=${selectedTeamId}`, 
+          {
+            headers: {
+              'x-rapidapi-key': apiKey,
+              'x-rapidapi-host': 'v3.football.api-sports.io',
+            },
+          }
+        );
+        const result = response.data.response;
+        playersData = result.map(player => player.player);
+      }
+  
+      setPlayers(playersData);
+      localStorage.setItem("players", JSON.stringify(playersData));
+      console.log("Fetched players");
     } catch (error) {
-      console.log("error", error);
+      console.error("Error fetching players:", error);
     }
-  };
-
-  // const fetchPlayers = async () => {
-  //   try {
-  //     const response = await axios.get(`https://v3.football.api-sports.io/players?season=${selectedYear}&team=${selectedTeamId}`, {
-  //       headers: {
-  //         'x-rapidapi-key': `${apiKey}`,
-  //         'x-rapidapi-host': 'v3.football.api-sports.io'
-  //       }
-  //     });
-  //     const result = response.data.response;
-  //     setPlayers(result.map(player => player.player));
-  //     localStorage.setItem("players", JSON.stringify(result.map(player => player.player)));
-  //     console.log("fetsch players");
-  //   } catch (error) {
-  //     console.error("Error fetching players:", error);
-  //   }
-  // };
+  };  
 
   useEffect(() => {
     if (players.length === 0) {
