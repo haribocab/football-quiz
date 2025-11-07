@@ -1,0 +1,36 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Client",
+      "type": "shell",
+      "command": "npm start",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Client",
+      "type": "shell",
+      "command": "npm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Datebase",
+      "type": "shell",
+      "command": "source ~/.nvm/nvm.sh && nvm use 18.3 && npm run start-js && npm run start-seasons",
+      "options": {
+        "cwd": "${workspaceFolder}/client",
+        "shell": {
+          "executable": "/bin/zsh",
+          "args": ["-i", "-c"]
+        }
+      },
+      "problemMatcher": []
+    }
+  ]
+}
