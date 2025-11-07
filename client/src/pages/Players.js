@@ -82,33 +82,33 @@ function Players({ team }) {
   }
   
   return (<>
-    <div className={"h-screen w-screen place-content-center grid fixed z-10 pointer-events-none" + (!quizStarted || timerFinished & !showAnswer ? 'inset-0 bg-black/20 backdrop-blur-sm dark:bg-slate-900/80' : '')}>
-      {!quizStarted && (
+    <div className={"w-screen place-content-center grid py-4"}>
+      {!quizStarted ? (
         <button onClick={handleStartQuiz}
         className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
         >Start Quiz</button>
-      )}
-      
-      {timerFinished && !showAnswer && (
-        <button onClick={handleShowAnswer}
+      ) : (
+       <button onClick={handleShowAnswer}
         className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
         >Show Answer</button>
       )}
-      
-      {showAnswer && (
+    </div>
+
+    {showAnswer && (
+      <div className="fixed h-screen w-screen flex items-center justify-center z-10">
         <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center">
           <div className="grid mb-6">
-            <div>{team.season.name}</div>
-            <div>{team.country}</div>
-            <div>{team.name}</div>
-            <img src={team.logo} alt={team.name} />
+              <div>{team.season.name}</div>
+              <div>{team.country}</div>
+              <div>{team.name}</div>
+              <img src={team.logo} alt={team.name} />
           </div>
           <Link 
           to={`/`} 
           className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Once More Quiz</Link>
         </div>
-      )}
-    </div>
+      </div>
+    )}
 
     <div className="max-w-4xl mx-auto min-h-screen place-content-center">
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 px-4 py-4">
@@ -118,12 +118,6 @@ function Players({ team }) {
              <img src={player.photo} alt={player.name} className="rounded" width="150" height="150" /> 
           </Link>
         ))}
-      </div>
-    </div>
-
-    <div className="fixed bottom-0 left-0 right-0 flex justify-center mb-4">
-      <div className="w-64 bg-gray-300">
-        <div className={`h-4 bg-${timerFinished ? "grey-300" : "blue-500"}`} style={{ width: `${(timer / 10) * 100}%` }} />
       </div>
     </div>
   </>);
