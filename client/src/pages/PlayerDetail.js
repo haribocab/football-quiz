@@ -23,14 +23,13 @@ function PlayerDetail(){
       
       if (process.env.REACT_APP_SOURCE === "local") {
         // Fetch data from the local JSON file in development
-        const response = await fetch(process.env.REACT_APP_SOURCE_LOCAL + '/response');
+        const response = await fetch(`${process.env.REACT_APP_SOURCE_LOCAL}/response`);
         const result = await response.json();
         playerData = result.find(item => item.player.id === parseInt(playerId, 10)).player;
       } else {
         // Fetch data from the API in production
           const response = await axios.get(
-          process.env.REACT_APP_SOURCE_API +
-          `/players?season=${selectedYear}&id=${playerId}`,
+          `${process.env.REACT_APP_SOURCE_API}/players?season=${selectedYear}&id=${playerId}`,
           {
             headers: {
               'x-rapidapi-key': apiKey,

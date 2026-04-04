@@ -18,14 +18,13 @@ function Players({ team }) {
   
       if (process.env.REACT_APP_SOURCE === "local") {
         // Fetch data from the local JSON file in development
-        const response = await fetch(process.env.REACT_APP_SOURCE_LOCAL + '/response');
+        const response = await fetch(`${process.env.REACT_APP_SOURCE_LOCAL}/response`);
         const result = await response.json();
         playersData = result.map(player => player.player);
       } else {
         // Fetch data from the API in production
         const response = await axios.get(
-          process.env.REACT_APP_SOURCE_API +
-          `/players?season=${selectedYear}&team=${selectedTeamId}`, 
+          `${process.env.REACT_APP_SOURCE_API}/players?season=${selectedYear}&team=${selectedTeamId}`, 
           {
             headers: {
               'x-rapidapi-key': apiKey,
@@ -110,7 +109,7 @@ function Players({ team }) {
       {/* --- Answer Modal --- */}
       {showAnswer && (
         <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-          {/* 背景のオーバーレイ */}
+          {/* Overlay */}
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
           
           <div className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl p-8 text-center animate-in fade-in zoom-in duration-200">
@@ -155,11 +154,6 @@ function Players({ team }) {
                   className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all"
                   loading="lazy"
                 />
-              </div>
-              
-              {/* Optional: 名前を隠す場合はここを調整 */}
-              <div className="p-2 bg-white">
-                <div className="h-1 w-8 bg-slate-100 rounded-full group-hover:bg-blue-400 transition-colors"></div>
               </div>
             </Link>
           ))}
