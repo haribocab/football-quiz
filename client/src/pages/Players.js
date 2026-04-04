@@ -16,15 +16,16 @@ function Players({ team }) {
     try {
       let playersData;
   
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.REACT_APP_SOURCE === "local") {
         // Fetch data from the local JSON file in development
-        const response = await fetch("http://localhost:3030/response");
+        const response = await fetch(process.env.REACT_APP_SOURCE_LOCAL + '/response');
         const result = await response.json();
         playersData = result.map(player => player.player);
       } else {
         // Fetch data from the API in production
         const response = await axios.get(
-          `https://v3.football.api-sports.io/players?season=${selectedYear}&team=${selectedTeamId}`, 
+          process.env.REACT_APP_SOURCE_API +
+          `/players?season=${selectedYear}&team=${selectedTeamId}`, 
           {
             headers: {
               'x-rapidapi-key': apiKey,
@@ -81,46 +82,91 @@ function Players({ team }) {
     }
   }
   
-  return (<>
-    <div className={"w-screen place-content-center grid py-4"}>
-      {!quizStarted ? (
-        <button onClick={handleStartQuiz}
-        className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
-        >Start Quiz</button>
-      ) : (
-       <button onClick={handleShowAnswer}
-        className="text-center bg-white text-blue-700 font-semibold hover:scale-105 py-2 px-4 border border-blue-500 rounded"
-        >Show Answer</button>
-      )}
-    </div>
-
-    {showAnswer && (
-      <div className="fixed h-screen w-screen flex items-center justify-center z-10">
-        <div className="rounded shadow-xl bg-white p-10 pointer-events-auto text-center">
-          <div className="grid mb-6">
-              <div>{team.season.name}</div>
-              <div>{team.country}</div>
-              <div>{team.name}</div>
-              <img src={team.logo} alt={team.name} />
-          </div>
-          <Link 
-          to={`/`} 
-          className="text-center hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Once More Quiz</Link>
+  return (
+    <div className="min-h-screen bg-slate-50 pb-20 text-slate-800">
+      {/* --- Header / Controls --- */}
+      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-200 py-4 mb-8">
+        <div className="max-w-4xl mx-auto px-6 flex justify-between items-center">
+          <h2 className="text-sm font-bold tracking-widest uppercase text-slate-400">Quiz Mode</h2>
+          
+          {!quizStarted ? (
+            <button 
+              onClick={handleStartQuiz}
+              className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 px-6 rounded-lg transition-all shadow-sm shadow-blue-100"
+            >
+              Start Quiz
+            </button>
+          ) : (
+            <button 
+              onClick={handleShowAnswer}
+              className="bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold py-2 px-6 rounded-lg transition-all shadow-sm"
+            >
+              Show Answer
+            </button>
+          )}
         </div>
       </div>
-    )}
 
-    <div className="max-w-4xl mx-auto min-h-screen place-content-center">
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 px-4 py-4">
-        {players.map((player) => (
-          <Link key={player.id} to={`/player/${selectedYear}/${player.id}`} className="rounded shadow-lg grid hover:scale-105 transition truncate relative">
-             {!quizStarted && <div className="bg-gray grid place-content-center absolute w-full h-full bg-emerald-300">?</div>}
-             <img src={player.photo} alt={player.name} className="rounded" width="150" height="150" /> 
-          </Link>
-        ))}
+      {/* --- Answer Modal --- */}
+      {showAnswer && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
+          {/* 背景のオーバーレイ */}
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+          
+          <div className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl p-8 text-center animate-in fade-in zoom-in duration-200">
+            <span className="text-[10px] font-black tracking-[0.2em] text-blue-500 uppercase">Correct Answer</span>
+            
+            <div className="my-6 flex flex-col items-center">
+              <img src={team.logo} alt={team.name} className="w-24 h-24 object-contain mb-4" />
+              <h3 className="text-2xl font-bold text-slate-800">{team.name}</h3>
+              <p className="text-slate-500 text-sm mt-1">{team.country} • {team.season.name}</p>
+            </div>
+
+            <Link 
+              to="/" 
+              className="block w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition-colors"
+            >
+              Once More Quiz
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* --- Players Grid --- */}
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 sm:gap-6">
+          {players.map((player) => (
+            <Link 
+              key={player.id} 
+              to={`/player/${selectedYear}/${player.id}`} 
+              className="group relative bg-white rounded-xl overflow-hidden border border-slate-200 transition-all hover:border-blue-400 hover:shadow-md"
+            >
+              {/* Overlay before quiz starts */}
+              {!quizStarted && (
+                <div className="absolute inset-0 z-10 bg-slate-100 flex items-center justify-center text-slate-300 font-black text-2xl">
+                  ?
+                </div>
+              )}
+              
+              <div className="aspect-square w-full bg-slate-50">
+                <img 
+                  src={player.photo} 
+                  alt={player.name} 
+                  className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all"
+                  loading="lazy"
+                />
+              </div>
+              
+              {/* Optional: 名前を隠す場合はここを調整 */}
+              <div className="p-2 bg-white">
+                <div className="h-1 w-8 bg-slate-100 rounded-full group-hover:bg-blue-400 transition-colors"></div>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
-  </>);
+  );
 }
 
 export default Players;

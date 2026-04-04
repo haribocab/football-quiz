@@ -88,6 +88,19 @@
         { "id": 135, "name": "Serie A" },
         { "id": 136, "name": "Serie B" }
       ]
+    },
+    {
+      "season": { "name": "2025/26", "year": 2025},
+      "leagues": [
+        { "id": 78, "name": "Bundesliga" },
+        { "id": 79, "name": "2. Bundesliga" },
+        { "id": 61, "name": "Ligue 1" },
+        { "id": 39, "name": "Premier League" },
+        { "id": 40, "name": "Championship" },
+        { "id": 140, "name": "La Liga" },
+        { "id": 135, "name": "Serie A" },
+        { "id": 136, "name": "Serie B" }
+      ]
     }
   ]
   
