@@ -6,8 +6,6 @@ import Players from "./pages/Players";
 import PlayerDetail from "./pages/PlayerDetail";
 
 function App() {
-  console.log("Check 123");
-  
   // --- States with Safe LocalStorage Access ---
   const [selectedYear, setSelectedYear] = useState(localStorage.getItem('selectedYear') || '0');
   const [selectedTeamId, setSelectedTeamId] = useState(localStorage.getItem('selectedTeamId') || '0');
@@ -127,7 +125,7 @@ function App() {
         if (process.env.REACT_APP_SOURCE === "local") {
           const res = await fetch(`${process.env.REACT_APP_SOURCE_LOCAL}/response`);
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          console.log("Full Response Data:", res.data);
+          console.log("Full Response Data Local:", res.data);
           const result = await res.json();
           teamsData = extractTeams(result);
         } else {
@@ -135,7 +133,7 @@ function App() {
             `${process.env.REACT_APP_SOURCE_API}/teams?season=${selectedYear}&league=${selectedLeagueId}`,
             { headers: { 'x-rapidapi-key': apiKey, 'x-rapidapi-host': 'v3.football.api-sports.io' } }
           );
-          console.log("Full Response Data:", res.data);
+          console.log("Full Response Data Live:", res.data);
           // API might return 200 with error object inside
           if (res.data.errors && Object.keys(res.data.errors).length > 0) {
             const err = new Error("API Internal Error");
