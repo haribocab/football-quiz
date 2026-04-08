@@ -125,6 +125,7 @@ function App() {
         if (process.env.REACT_APP_SOURCE === "local") {
           const res = await fetch(`${process.env.REACT_APP_SOURCE_LOCAL}/response`);
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          console.log("Full Response Data:", res.data);
           const result = await res.json();
           teamsData = extractTeams(result);
         } else {
